@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Kanban Board</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #007b8f;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    .board {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .column {
+      background: #f5f5f5;
+      border-radius: 8px;
+      flex: 1;
+      padding: 10px;
+      color: #000;
+      min-height: 300px;
+    }
+
+    .column h2 {
+      text-align: center;
+      padding: 5px;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 18px;
+    }
+
+    .backlog h2 { background: #ff6b6b; }
+    .doing h2 { background: #ffe66d; color: #333; }
+    .review h2 { background: #7bed9f; }
+    .done h2 { background: #70a1ff; }
+
+    .task {
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px;
+      margin: 8px 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      cursor: grab;
+    }
+
+    .task:active {
+      cursor: grabbing;
+      opacity: 0.6;
+    }
+
+    .column.drag-over {
+      background: #dfe6e9;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kanban Board</h1>
+  <div class="board">
+    <div class="column backlog" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h2>Backlog</h2>
+      <div class="task" draggable="true" ondragstart="drag(event)">Task 1</div>
+      <div class="task" draggable="true" ondragstart="drag(event)">Task 2</div>
+    </div>
+    <div class="column doing" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h2>Doing</h2>
+    </div>
+    <div class="column review" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h2>Review</h2>
+    </div>
+    <div class="column done" ondrop="drop(event)" ondragover="allowDrop(event)">
+      <h2>Done</h2>
+    </div>
+  </div>
+
+  <script>
+    let draggedTask = null;
+
+    function drag(event) {
+      draggedTask = event.target;
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.add("drag-over");
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove("drag-over");
+      if (draggedTask) {
+        event.currentTarget.appendChild(draggedTask);
+      }
+    }
+
+    document.querySelectorAll('.column').forEach(col => {
+      col.addEventListener('dragleave', () => col.classList.remove('drag-over'));
+    });
+  </script>
+</body>
+</html>
